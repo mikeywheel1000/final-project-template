@@ -1,0 +1,892 @@
+openapi: 3.0.3
+info:
+  title: Blog Api
+  version: 1.0.0
+  description: API documentation for the Blog API
+servers:
+  - url: http://localhost:3000/api
+
+tags:
+  - name: cards
+    description: Operations related to SWU cards
+  - name: auth
+    description: User authentication endpoints
+  - name: leaders
+    description: Operations related to SWU leaders
+
+paths: 
+  /card: 
+    get: 
+      tags:
+        - cards
+      summary: Get All cards
+      description: Retrieves a list of all SWU cards.
+      parameters: 
+        - $ref: "#/components/parameters/search"
+        - $ref: "#/components/parameters/sortBy"
+        - $ref: "#/components/parameters/order"
+        - $ref: "#/components/parameters/offset"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        '200':
+          description: A list of cards
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Card'
+    post:
+      security: 
+        - bearerAuth: []
+      tags:
+        - cards
+      summary: Create a new card
+      description: create a new SWU card
+      requestBody:
+        description: The card object to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref : "#/components/schemas/Card"
+      responses:
+        '201': 
+          description: Card successfully created
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Card"
+        '400': 
+          $ref : "#/components/responses/InvalidCardInput"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '403': 
+          $ref: "#/components/responses/Forbidden"
+
+  /card/{id}:
+    get:
+      tags:
+        - cards
+      summary: Gets a card by id
+      description: Retrieves a single SWU card by it's id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        '200': 
+          description: A single SWU card
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Card"
+      
+        '404': 
+          $ref: "#/components/responses/NotFound"
+
+        '400': 
+          $ref: "#/components/responses/InvalidID"
+    put: 
+      security: 
+        - bearerAuth: []
+      tags:
+        - cards
+      summary: updates a card by id
+      description: Updates a single SWU card by it's id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        description: The new card to update with
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref : "#/components/schemas/Card"
+      responses:
+        '200': 
+          description: Card successfully updated
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Card"
+        '400': 
+            description: Bad request due to invalid data or Id
+            content: 
+              application/json:
+                schema:  
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      items: 
+                        type: string
+                  example: 
+                    errors: 
+                      - "Name must be at least 3 characters"
+                      - "Cost must be a positive integer"
+                      - "Stats must be a string"
+                      - "Stats must be in format: attack/health, where attack and health are numbers"
+                      - "Traits must be a string"
+                      - "type must be one of EVENT, UNIT, UPGRADE"
+                      - "Text must be at least 10 characters"
+                      - "aspects must be one or more of the following: Aggression, Vigilance, Cunning, Command, Heroism, Villainy"
+                      - "Id must be an integer"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '403': 
+          $ref: "#/components/responses/Forbidden"
+        '404': 
+          $ref: "#/components/responses/NotFound"
+    delete:
+      security: 
+        - bearerAuth: []
+      tags:
+        - cards
+      summary: Deletes a card by id
+      description: Deletes a single SWU card by it's id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        '204': 
+          description: Card deleted successfully
+      
+        '404': 
+          $ref: "#/components/responses/NotFound"
+
+        '400': 
+          $ref: "#/components/responses/InvalidID"
+        '401': 
+          $ref: "#/components/responses/Unauthorized"
+        '403': 
+          $ref: "#/components/responses/Forbidden"
+  /deck: 
+    get: 
+      tags:
+        - decks
+      summary: Get All decks
+      description: Retrieves a list of all SWU decks.
+      parameters: 
+        - $ref: "#/components/parameters/search"
+        - $ref: "#/components/parameters/sortBy"
+        - $ref: "#/components/parameters/order"
+        - $ref: "#/components/parameters/offset"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        '200':
+          description: A list of decks
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Deck'
+    post:
+      security: 
+        - bearerAuth: []
+      tags:
+        - decks
+      summary: Create a new deck
+      description: create a new SWU deck
+      requestBody:
+        description: The deck object to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref : "#/components/schemas/Deck"
+      responses:
+        '201': 
+          description: Deck successfully created
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deck"
+        '400': 
+          $ref : "#/components/responses/InvalidDeckInput"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '403': 
+          $ref: "#/components/responses/Forbidden"
+
+  /deck/{id}:
+    get:
+      tags:
+        - decks
+      summary: Gets a deck by id
+      description: Retrieves a single SWU deck by it's id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        '200': 
+          description: A single SWU deck
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deck"
+      
+        '404': 
+          $ref: "#/components/responses/NotFound"
+
+        '400': 
+          $ref: "#/components/responses/InvalidID"
+    put: 
+      security: 
+        - bearerAuth: []
+      tags:
+        - decks
+      summary: updates a deck by id
+      description: Updates a single SWU deck by it's id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        description: The new deck to update with
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref : "#/components/schemas/Deck"
+      responses:
+        '200': 
+          description: Deck successfully updated
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deck"
+        '400': 
+            description: Bad request due to invalid data or Id
+            content: 
+              application/json:
+                schema:  
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      items: 
+                        type: string
+                  example: 
+                    errors: 
+                      - "Name must be at least 3 characters"
+                      - "Description must be at least 10 characters"
+                      - "LeaderId must be a positive integer"
+                      - "Cannot update Deck: referenced Leader with id {number} does not exist"
+                      - "Deck # not found"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '403': 
+          $ref: "#/components/responses/Forbidden"
+        '404': 
+          $ref: "#/components/responses/NotFound"
+    delete:
+      security: 
+        - bearerAuth: []
+      tags:
+        - decks
+      summary: Deletes a deck by id
+      description: Deletes a single SWU deck by it's id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        '204': 
+          description: Deck deleted successfully
+      
+        '404': 
+          $ref: "#/components/responses/NotFound"
+
+        '400': 
+          $ref: "#/components/responses/InvalidID"
+        '401': 
+          $ref: "#/components/responses/Unauthorized"
+        '403': 
+          $ref: "#/components/responses/Forbidden"
+  /deck/add/{id}:
+    put: 
+      security: 
+        - bearerAuth: []
+      tags:
+        - decks
+      summary: adds cards to the decklist
+      description: Adds cards to a single SWU deck by it's id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        description: the list of cards to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref : "#/components/schemas/Decklist"
+      responses:
+        '200': 
+          description: Deck successfully updated
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Card"
+        '400': 
+            description: Bad request due to invalid data or Id
+            content: 
+              application/json:
+                schema:  
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      items: 
+                        type: string
+                  example: 
+                    errors: 
+                      - "One or more cards not found. Send me an email, and let me know what's missing!"
+                      - "Deck # not found"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '403': 
+          $ref: "#/components/responses/Forbidden"
+        '404': 
+          $ref: "#/components/responses/NotFound"
+  /deck/remove/{id}:
+    put: 
+      security: 
+        - bearerAuth: []
+      tags:
+        - decks
+      summary: removes cards from the decklist
+      description: removes cards from a single SWU deck by it's id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        description: the list of cards to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref : "#/components/schemas/Decklist"
+      responses:
+        '200': 
+          description: Deck successfully updated
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Card"
+        '400': 
+            description: Bad request due to invalid data or Id
+            content: 
+              application/json:
+                schema:  
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      items: 
+                        type: string
+                  example: 
+                    errors: 
+                      - "One or more cards not found. Send me an email, and let me know what's missing!"
+                      - "Deck # not found"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '403': 
+          $ref: "#/components/responses/Forbidden"
+        '404': 
+          $ref: "#/components/responses/NotFound"
+  /leader: 
+    get: 
+      tags:
+        - leaders
+      summary: Get All leaders
+      description: Retrieves a list of all SWU leaders.
+      parameters: 
+        - $ref: "#/components/parameters/search"
+        - $ref: "#/components/parameters/sortBy"
+        - $ref: "#/components/parameters/order"
+        - $ref: "#/components/parameters/offset"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        '200':
+          description: A list of leaders
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Leader'
+    post:
+      security: 
+        - bearerAuth: []
+      tags:
+        - leaders
+      summary: Create a new leader
+      description: create a new SWU leader
+      requestBody:
+        description: The leader object to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref : "#/components/schemas/Leader"
+      responses:
+        '201': 
+          description: leader successfully created
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Leader"
+        '400': 
+          $ref : "#/components/responses/InvalidLeaderInput"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '403': 
+          $ref: "#/components/responses/Forbidden"
+
+  /leader/{id}:
+    get:
+      tags:
+        - leaders
+      summary: Gets a leader by id
+      description: Retrieves a single SWU leader by it's id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        '200': 
+          description: A single SWU leader
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Leader"
+      
+        '404': 
+          $ref: "#/components/responses/NotFound"
+
+        '400': 
+          $ref: "#/components/responses/InvalidID"
+    put: 
+      security: 
+        - bearerAuth: []
+      tags:
+        - leaders
+      summary: updates a leader by id
+      description: Updates a single SWU leader by it's id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        description: The new leader to update with
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref : "#/components/schemas/Leader"
+      responses:
+        '200': 
+          description: leader successfully updated
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Leader"
+        '400': 
+            description: Bad request due to invalid data or Id
+            content: 
+              application/json:
+                schema:  
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      items: 
+                        type: string
+                  example: 
+                    errors: 
+                      - "Name must be at least 3 characters"
+                      - "Flip condition must be at least 10 characters"
+                      - "Stats must be a string"
+                      - "Stats must be in format: attack/health, where attack and health are numbers"
+                      - "Traits must be a string"
+                      - "type must be one of EVENT, UNIT, UPGRADE"
+                      - "Text must be at least 10 characters"
+                      - "aspects must be one or more of the following: Aggression, Vigilance, Cunning, Command, Heroism, Villainy"
+                      - "Id must be an integer"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '403': 
+          $ref: "#/components/responses/Forbidden"
+        '404': 
+          $ref: "#/components/responses/NotFound"
+    delete:
+      security: 
+        - bearerAuth: []
+      tags:
+        - leaders
+      summary: Deletes a leader by id
+      description: Deletes a single SWU leader by it's id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        '204': 
+          description: Leader deleted successfully
+      
+        '404': 
+          $ref: "#/components/responses/NotFound"
+
+        '400': 
+          $ref: "#/components/responses/InvalidID"
+        '401': 
+          $ref: "#/components/responses/Unauthorized"
+        '403': 
+          $ref: "#/components/responses/Forbidden"
+
+
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: authenticate user
+      description: authenticate a user, and return access token."
+      requestBody: 
+        description: user login credentials
+        content: 
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCredentials"
+      responses:
+        '200':
+          description: authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  accessToken:
+                    type: string
+                example: 
+                  accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc1MTY0Mzc5LCJleHAiOjE3NzUxNjc5Nzl9.y6HJobmS1Gn7un80poIB4IHdjuK7oldX8UKe35r-qkc
+        '400':
+          $ref: "#/components/responses/InvalidUserInput"
+        '401': 
+          $ref: "#/components/responses/Unauthorized"
+  /auth/signup:
+    post:
+      tags:
+        - auth
+      summary: Register user 
+      description: Create a new user account
+      requestBody: 
+        description: user signup credentials
+        content: 
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCredentials"
+      responses:
+        '201':
+          description: Sign up successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  id:
+                    type: integer
+                  email:
+                    type: string
+                  role: 
+                    type: string 
+                example:
+                  id: 1 
+                  email: bobby@bobby.com
+                  role: USER
+        '400':
+          $ref: "#/components/responses/InvalidUserInput"
+        '409':
+          description: Duplicate email
+          content: 
+            application/json:
+              schema:  
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items: 
+                      type: string
+                example: 
+                  errors: 
+                    - "Email is already in use"
+
+
+
+components:
+  schemas:
+    Leader: 
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+        name: 
+          type: string
+          example: "Boba Fett, Krayt's Clan Commander"
+        traits:
+          type: string
+          example: "Underworld, Bounty Hunter"
+        aspects:
+          type: string
+          example: "Command, Villainy"
+        flipCondition:
+          type: string
+          example: "If you control 5 or more resources, deploy this leader."
+        stats:
+          type: string
+          example: "3/6"
+        text:
+          type: string
+          example: "When a friendly Bounty Hunter unit's attack ends: If the defending unit was defeated, you may exhaust this leader. If you do, create a Credit token. When flipped: Raid 1, When a friendly Bounty Hunter unit's attack ends: If the defending unit was defeated, create a Credit token."
+    Decklist:
+      type: object
+      properties:
+        cards:
+          type: string
+          example: "1,2,3"
+    Deck:
+      type: object
+      properties:
+        id: 
+          type: integer
+          readOnly: true
+          example: 1
+        name: 
+          type: string
+          example: "Kudo brings the bears"
+        description:
+          type: string
+          example: "Bear aggro with a combo wincon"
+        createdAt:
+          type: string
+          readOnly: true
+          example: "2026-03-02T20:30:00"
+        authorId:
+          type: integer
+          readOnly: true
+          example: 1
+        leaderId:
+          type: integer
+          example: 1
+    Card: 
+      type: object
+      properties: 
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+        name: 
+          type: string
+          example: "Jyn Erso, Take the next Chance"
+        traits:
+          type: string
+          example: "Rebel"
+        aspects:
+          type: string
+          example: "Command, Cunning, Heroism"
+        cost:
+          type: integer
+          example: 2
+        stats:
+          type: string
+          example: "2/2"
+        type:
+          type: string
+          enum: ["EVENT","UNIT","UPGRADE"]
+        text:
+          type: string
+          example: "When played: Either give an experience token to a unit or exhaust a unit."
+    UserCredentials:
+      type: object
+      properties:
+        email:
+          type: string
+        password: 
+          type: string
+      example:
+        email: "charlie@demo.com"
+        password: "charlie1234"
+  parameters:
+    id: 
+      name: id
+      in: path
+      required: true
+      description: Resource ID
+      schema:
+        type: integer
+        example: 1
+    search: 
+      name: search
+      in: query
+      required: false
+      description: Filter items containing this keyword
+      schema:
+        type: string
+        example: Command
+    sortBy:
+      name: sortBy
+      in: query
+      required: false
+      description: Field to sort items by
+      schema:
+        type: string
+        example: name
+    order:
+      name: order
+      in: query
+      required: false
+      description: Sort order
+      schema: 
+        type: string
+        enum: [asc,desc]
+        example: asc
+    offset:
+      name: offset
+      in: query
+      required: false
+      description: Number of resources to skip
+      schema:
+        type: integer
+        example: 0
+    limit: 
+      name: limit 
+      in: query
+      required: false
+      description: Number of resources to return per page
+      schema:
+        type: integer
+        example: 10
+  responses:
+    NotFound:
+      description: Resource not found
+      content: 
+        application/json: 
+          schema:
+            type: object
+            properties:
+              error: 
+                type: string
+            example: "Resource 1 not found"
+    InvalidID:
+      description: Invalid ID
+      content: 
+        application/json: 
+          schema:
+            type: object
+            properties:
+              errors: 
+                type: array
+                items:
+                  type: string
+            example:
+              errors:
+              - "Id must be an integer" 
+    InvalidCardInput:
+      description: Bad request due to invalid data
+      content: 
+        application/json:
+          schema:  
+            type: object
+            properties:
+              errors:
+                type: array
+                items: 
+                  type: string
+            example: 
+              errors: 
+                - "Name must be at least 3 characters"
+                - "Cost must be a positive integer"
+                - "Stats must be a string"
+                - "Stats must be in format: attack/health, where attack and health are numbers"
+                - "Traits must be a string"
+                - "type must be one of EVENT, UNIT, UPGRADE"
+                - "Text must be at least 10 characters"
+                - "aspects must be one or more of the following: Aggression, Vigilance, Cunning, Command, Heroism, Villainy"
+    InvalidDeckInput:
+      description: Bad request due to invalid data
+      content: 
+        application/json:
+          schema:  
+            type: object
+            properties:
+              errors:
+                type: array
+                items: 
+                  type: string
+            example: 
+              errors: 
+                - "Name must be at least 3 characters"
+                - "Description must be at least 10 characters"
+                - "LeaderId must be a positive integer"
+                - "Cannot create Deck: referenced Leader with id {number} does not exist"
+    InvalidLeaderInput:
+      description: Bad request due to invalid data
+      content: 
+        application/json:
+          schema:  
+            type: object
+            properties:
+              errors:
+                type: array
+                items: 
+                  type: string
+            example: 
+              errors: 
+                - "Name must be at least 3 characters"
+                - "Flip condition must be at least 10 characters "
+                - "Stats must be a string"
+                - "Stats must be in format: attack/health, where attack and health are numbers"
+                - "Traits must be a string"
+                - "type must be one of EVENT, UNIT, UPGRADE"
+                - "Text must be at least 10 characters"
+                - "aspects must be one or more of the following: Aggression, Vigilance, Cunning, Command, Heroism, Villainy"
+    Unauthorized:
+      description: client is not authenticated
+      content: 
+        application/json:
+          schema:  
+            type: object
+            properties:
+              errors:
+                type: array
+                items: 
+                  type: string
+            example: 
+              errors: 
+                - "not authenticated. please provide a valid token."
+    InvalidUserInput:
+      description: Bad request due to invalid data
+      content: 
+        application/json:
+          schema:  
+            type: object
+            properties:
+              errors:
+                type: array
+                items: 
+                  type: string
+            example: 
+              errors: 
+                - "Email is required"
+                - "Password is required"
+    Forbidden: 
+      description: client is not authorized
+      content: 
+        application/json:
+          schema:  
+            type: object
+            properties:
+              errors:
+                type: array
+                items: 
+                  type: string
+            example: 
+              errors: 
+                - "Forbidden: insufficuent permission."
+  securitySchemes:
+    bearerAuth: 
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Deck {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  createdAt DateTime @default(now()) @map("created_at")
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId Int @map("user_id")
+  leader Leader @relation(fields: [leaderId], references: [id], onDelete: NoAction)
+  leaderId Int @map("leader_id")
+  cards Card[]
+  @@map("decks")
+}
+model Card {
+  id Int @id @default(autoincrement())
+  name String
+  traits String
+  aspects String
+  cost Int 
+  stats String 
+  type Type @default(EVENT)
+  text String 
+  decks Deck[]
+  @@map("cards")
+}
+model Leader {
+  id Int @id @default(autoincrement())
+  name String
+  traits String
+  aspects String
+  flipCondition String @map("flip_condition")
+  stats String 
+  text String 
+  decks Deck[]
+  @@map("leaders")
+}
+
+model User {
+ id Int @id @default(autoincrement())
+ email String @unique
+ password String
+ role Role @default(USER)
+ decks Deck[]
+ @@map("users")
+}
+enum Role {
+  USER
+  ADMIN
+}
+enum Type {
+  UNIT
+  EVENT
+  UPGRADE
+}
