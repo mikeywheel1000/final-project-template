@@ -5,6 +5,9 @@ info:
   description: API documentation for the Blog API
 servers:
   - url: http://localhost:3000/api
+    description: local testing environment
+  - url: https://final-project-service-i270.onrender.com
+    description: Production server
 
 tags:
   - name: cards
