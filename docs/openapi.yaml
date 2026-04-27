@@ -565,8 +565,19 @@ paths:
                   accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc1MTY0Mzc5LCJleHAiOjE3NzUxNjc5Nzl9.y6HJobmS1Gn7un80poIB4IHdjuK7oldX8UKe35r-qkc
         '400':
           $ref: "#/components/responses/InvalidUserInput"
-        '401': 
-          $ref: "#/components/responses/Unauthorized"
+        '401':
+          description: "Invalid credentials"
+          content: 
+            application/json:
+              schema:   
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items: 
+                      type: string
+                example: 
+                  error: "Invalid credentials"
   /auth/signup:
     post:
       tags:
