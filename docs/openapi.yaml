@@ -269,7 +269,6 @@ paths:
                       - "Description must be at least 10 characters"
                       - "LeaderId must be a positive integer"
                       - "Cannot update Deck: referenced Leader with id {number} does not exist"
-                      - "Deck # not found"
         '401':
           $ref: "#/components/responses/Unauthorized"
         '403': 
