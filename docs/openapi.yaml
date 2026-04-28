@@ -207,8 +207,6 @@ paths:
           $ref : "#/components/responses/InvalidDeckInput"
         '401':
           $ref: "#/components/responses/Unauthorized"
-        '403': 
-          $ref: "#/components/responses/Forbidden"
 
   /deck/{id}:
     get:
