@@ -505,7 +505,6 @@ paths:
                       - "Stats must be a string"
                       - "Stats must be in format: attack/health, where attack and health are numbers"
                       - "Traits must be a string"
-                      - "type must be one of EVENT, UNIT, UPGRADE"
                       - "Text must be at least 10 characters"
                       - "aspects must be one or more of the following: Aggression, Vigilance, Cunning, Command, Heroism, Villainy"
                       - "Id must be an integer"
