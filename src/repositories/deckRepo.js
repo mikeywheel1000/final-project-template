@@ -5,8 +5,7 @@ export async function getAll({ search, sortBy, order, offset, limit }) {
   if (search) {
     conditions.OR = [
       { name: { contains: search, mode: 'insensitive' } },
-      { traits: { contains: search, mode: 'insensitive' } },
-      { text: { contains: search, mode: 'insensitive' } },
+      { description: { contains: search, mode: 'insensitive' } },
     ];
   }
   const decks = await prisma.deck.findMany({
