@@ -793,7 +793,7 @@ components:
                   type: string
             example:
               errors:
-              - "Id must be an integer" 
+              - "Id must be a positive integer" 
     InvalidCardInput:
       description: Bad request due to invalid data
       content: 
