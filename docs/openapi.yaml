@@ -336,8 +336,8 @@ paths:
                         type: string
                   example: 
                     errors: 
+                      - "Cards must be in the format (Card#,Card#,Card#)"
                       - "One or more cards not found. Send me an email, and let me know what's missing!"
-                      - "Deck # not found"
         '401':
           $ref: "#/components/responses/Unauthorized"
         '403': 

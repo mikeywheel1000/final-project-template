@@ -16,7 +16,10 @@ export const validateCardList = [
     .withMessage('Cards are required')
     .bail()
     .isString({min: 1, max: 50})
-    .withMessage('Cards must be a string'),
+    .withMessage('Cards must be a string')
+    .bail()
+    .matches(/^\d+(,\d+)*$/)
+    .withMessage('Cards must be in the format (Card#,Card#,Card#)'),
     handleValidationErrors,
 ];
 
